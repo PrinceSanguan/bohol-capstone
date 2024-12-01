@@ -35,12 +35,17 @@ include('includes/dbconnection.php');
     <!-- Custom Responsive Styles -->
     <style>
           .hero-wrap {
-            height: 100vh;
+             height: 100vh;
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
             position: relative;
-            background-repeat: no-repeat;
+            transition: background-image 1s ease-in-out;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center; /* Center text inside hero */
+            padding: 0 20px; /* Add padding for smaller screens */
         }
 
         .hero-wrap .overlay {
@@ -97,13 +102,7 @@ include('includes/dbconnection.php');
             height: 300px;
         }
 
-        .text {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            padding: 1rem;
-        }
+
 
         .form-container {
             display: flex;
@@ -201,6 +200,9 @@ include('includes/dbconnection.php');
 
     <!-- Include Footer -->
     <?php include_once('includes/footer.php');?>
+    <!-- Include Footer -->
+
+
     <script src="js/jquery.min.js"></script>
 <script src="js/jquery-migrate-3.0.1.min.js"></script>
 <script src="js/popper.min.js"></script>
@@ -218,7 +220,6 @@ include('includes/dbconnection.php');
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBVWaKrjvy3MaE7SQ74_uJiULgl1JY0H2s&sensor=false"></script>
 <script src="js/google-map.js"></script>
 <script src="js/main.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>

@@ -1,19 +1,19 @@
-<footer class="ftco-footer ftco-section img" style="background-color: #4c5a7d; background-image: url('images/mapss.jpg'); background-size: cover; background-blend-mode: multiply; padding: 20px 0;">
+<footer class="ftcop-footer ftcop-section img" style="background-color: #4c5a7d; background-image: url('images/mapss.jpg'); background-size: cover; background-blend-mode: multiply; padding: 20px 0;">
   <div class="container">
     <div class="row mb-4">
       <div class="col-md-4 col-sm-12">
-        <div class="ftco-footer-widget">
+        <div class="ftcop-footer-widget">
           <p>Let your talents and achievements shine with a scholarship.</p>
-          <ul class="ftco-footer-social list-unstyled float-md-left float-lft mt-2">
-            <li class="ftco-animate"><a href="https://www.facebook.com/BNSCPAGE"><span class="icon-facebook"></span></a></li>
-            <li class="ftco-animate"><a href="https://www.youtube.com/channel/UCkjPm1v0oWecX_oEsX65W1w"><span class="icon-youtube"></span></a></li>
+          <ul class="ftcop-footer-social list-unstyled float-md-left float-lft mt-2">
+            <li class="ftcop-animate"><a href="https://www.facebook.com/BNSCPAGE"><span class="icon-facebook"></span></a></li>
+            <li class="ftcop-animate"><a href="https://www.youtube.com/channel/UCkjPm1v0oWecX_oEsX65W1w"><span class="icon-youtube"></span></a></li>
           </ul>
         </div>
       </div>
 
       <div class="col-md-4 col-sm-12">
-        <div class="ftco-footer-widget">
-          <h2 class="ftco-heading-2">Site Links</h2>
+        <div class="ftcop-footer-widget">
+          <h2 class="ftcop-heading-2">Site Links</h2>
           <ul class="list-unstyled">
             <li><a href="index.php" class="py-1 d-block">Home</a></li>
             <li><a href="about.php" class="py-1 d-block">About</a></li>
@@ -25,8 +25,8 @@
       </div>
 
       <div class="col-md-4 col-sm-12">
-        <div class="ftco-footer-widget">
-          <h2 class="ftco-heading-2">Contact Information</h2>
+        <div class="ftcop-footer-widget">
+          <h2 class="ftcop-heading-2">Contact Information</h2>
           <div class="block-23">
             <ul>
               <?php
@@ -59,44 +59,44 @@
 
 <style>
   /* Footer Styles */
-  .ftco-footer {
+  .ftcop-footer {
     color: #fff;
     padding: 20px 0;
   }
 
-  .ftco-footer h2 {
+  .ftcop-footer h2 {
     font-size: 18px;
     margin-bottom: 10px; /* Reduced margin */
   }
 
-  .ftco-footer p {
+  .ftcop-footer p {
     font-size: 14px;
     margin-bottom: 10px;
   }
 
-  .ftco-footer ul {
+  .ftcop-footer ul {
     list-style: none;
     padding-left: 0;
   }
 
-  .ftco-footer ul li {
+  .ftcop-footer ul li {
     margin-bottom: 5px; /* Adjusted margin */
   }
 
-  .ftco-footer a {
+  .ftcop-footer a {
     color: #ddd;
     text-decoration: none;
   }
 
-  .ftco-footer a:hover {
+  .ftcop-footer a:hover {
     color: black;
   }
 
-  .ftco-footer-social {
+  .ftcop-footer-social {
     margin-top: 5px; /* Reduced margin */
   }
 
-  .ftco-footer-social li {
+  .ftcop-footer-social li {
     display: inline-block;
     margin-right: 5px; /* Reduced margin */
   }
@@ -106,21 +106,21 @@
   }
 
   @media (max-width: 768px) {
-    .ftco-footer {
+    .ftcop-footer {
       padding: 15px 0;
     }
 
-    .ftco-footer p {
+    .ftcop-footer p {
       font-size: 13px;
     }
 
-    .ftco-footer h2 {
+    .ftcop-footer h2 {
       font-size: 16px;
     }
   }  
 
   @media (max-width: 576px) {
-    .ftco-footer {
+    .ftcop-footer {
       text-align: left;
     }
   }

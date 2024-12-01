@@ -1,3 +1,17 @@
+<?php
+// Initialize viewed applications array in session if it doesn't exist
+if (!isset($_SESSION['viewed_applications'])) {
+    $_SESSION['viewed_applications'] = array();
+}
+
+// If there's a viewid parameter in the URL, add it to viewed applications
+if (isset($_GET['viewid'])) {
+    $_SESSION['viewed_applications'][] = $_GET['viewid'];
+    // Remove duplicates
+    $_SESSION['viewed_applications'] = array_unique($_SESSION['viewed_applications']);
+}
+?>
+
 <header class="topbar-nav">
   <nav class="navbar navbar-expand fixed-top">
     <ul class="navbar-nav mr-auto align-items-center">
@@ -13,14 +27,22 @@
         <?php 
         $uid = $_SESSION['uid'];
         // Include pending applications along with approved and rejected ones
-        $sql = "SELECT * FROM tblapply WHERE (Status='Approved' OR Status='Rejected' OR Status='Pending') AND UserID='$uid'";
+        $sql = "SELECT * FROM tblapply WHERE (Status='Approved' OR Status='Rejected' OR Status='Pending') AND UserID=:uid";
         $query = $dbh->prepare($sql);
+        $query->bindParam(':uid', $uid, PDO::PARAM_STR);
         $query->execute();
         $results = $query->fetchAll(PDO::FETCH_OBJ);
-        $statusCount = $query->rowCount();
+        
+        // Count unviewed applications
+        $unviewedCount = 0;
+        foreach ($results as $row) {
+            if (!in_array($row->ID, $_SESSION['viewed_applications'])) {
+                $unviewedCount++;
+            }
+        }
         ?>
         <a class="nav-link dropdown-toggle dropdown-toggle-nocaret waves-effect" data-toggle="dropdown" href="javascript:void();">
-          <i class="fa fa-bell-o"></i>(<?php echo htmlentities($statusCount); ?>)
+          <i class="fa fa-bell-o"></i>(<?php echo htmlentities($unviewedCount); ?>)
         </a>
         <ul class="dropdown-menu dropdown-menu-right">
           <?php foreach ($results as $row) { ?>
