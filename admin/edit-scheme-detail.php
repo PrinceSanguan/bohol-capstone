@@ -13,84 +13,84 @@ if (isset($_POST['submit'])) {
     $yearofsch = $_POST['yearofsch'];
     $lastdate = $_POST['lastdate'];
     $schfee = $_POST['schfee'];
+    $department = $_POST['department'];
     $requirements = isset($_POST['requirements']) ? $_POST['requirements'] : []; // Ensure it's an array
     $eid = $_GET['editid'];
+    $imagePath = null;
 
     // Handle image upload
-    if ($_FILES["image"]["name"] != '') {
+    if (!empty($_FILES["image"]["name"])) {
         $target_dir = "uploads/";
         $target_file = $target_dir . basename($_FILES["image"]["name"]);
         $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
-        $uploadOk = 1;
+        $uploadOk = true;
 
-        // Check if image file is an actual image
-        $check = getimagesize($_FILES["image"]["tmp_name"]);
-        if ($check === false) {
+        // Validate image
+        if (!getimagesize($_FILES["image"]["tmp_name"])) {
             echo '<script>alert("File is not an image.")</script>';
-            $uploadOk = 0;
+            $uploadOk = false;
         }
-
-        // Check file size
         if ($_FILES["image"]["size"] > 500000) {
             echo '<script>alert("Sorry, your file is too large.")</script>';
-            $uploadOk = 0;
+            $uploadOk = false;
         }
-
-        // Allow certain file formats
-        if ($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg" && $imageFileType != "gif") {
+        if (!in_array($imageFileType, ['jpg', 'jpeg', 'png', 'gif'])) {
             echo '<script>alert("Sorry, only JPG, JPEG, PNG & GIF files are allowed.")</script>';
-            $uploadOk = 0;
+            $uploadOk = false;
         }
+        if ($uploadOk && move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
+            $imagePath = $target_file;
+        } else {
+            echo '<script>alert("Sorry, there was an error uploading your file.")</script>';
+        }
+    }
 
-        // If everything is ok, try to upload the file
-        if ($uploadOk == 1) {
-            if (move_uploaded_file($_FILES["image"]["tmp_name"], $target_file)) {
-                // Update with image
-                $sql = "UPDATE tblscheme SET SchemeName=:schemename, Yearofscholarship=:yearofsch, LastDate=:lastdate, Scholarfee=:schfee, Image=:image WHERE ID=:eid";
-                $query = $dbh->prepare($sql);
-                $query->bindParam(':image', $target_file, PDO::PARAM_STR); // Save image path
-            } else {
-                echo '<script>alert("Sorry, there was an error uploading your file.")</script>';
+    // Process requirements
+    $requirementNames = [];
+    if (!empty($requirements)) {
+        foreach ($requirements as $reqId) {
+            $reqQuery = "SELECT requirement_name FROM scholarship_requirements WHERE id = :reqId";
+            $reqStmt = $dbh->prepare($reqQuery);
+            $reqStmt->bindParam(':reqId', $reqId, PDO::PARAM_INT);
+            $reqStmt->execute();
+            $reqRow = $reqStmt->fetch(PDO::FETCH_ASSOC);
+            if ($reqRow) {
+                $requirementNames[] = $reqRow['requirement_name'];
             }
         }
-    } else {
-        // Update without image
-        $sql = "UPDATE tblscheme SET SchemeName=:schemename, Yearofscholarship=:yearofsch, LastDate=:lastdate, Scholarfee=:schfee WHERE ID=:eid";
-        $query = $dbh->prepare($sql);
     }
+    $requirementsString = implode(', ', $requirementNames);
 
-    // Get requirement names instead of IDs
-    $requirementNames = [];
-    foreach ($requirements as $reqId) {
-        $reqQuery = "SELECT requirement_name FROM scholarship_requirements WHERE id = :reqId";
-        $reqStmt = $dbh->prepare($reqQuery);
-        $reqStmt->bindParam(':reqId', $reqId, PDO::PARAM_INT);
-        $reqStmt->execute();
-        $reqRow = $reqStmt->fetch(PDO::FETCH_ASSOC);
-        if ($reqRow) {
-            $requirementNames[] = $reqRow['requirement_name'];
-        }
+    // Prepare SQL query
+    $sql = "UPDATE tblscheme 
+            SET SchemeName=:schemename, 
+                Yearofscholarship=:yearofsch, 
+                LastDate=:lastdate, 
+                Scholarfee=:schfee, 
+                department=:department, 
+                Requirements=:requirements";
+    if ($imagePath) {
+        $sql .= ", Image=:image";
     }
-    $requirementsString = implode(', ', $requirementNames); // Create a comma-separated string
+    $sql .= " WHERE ID=:eid";
 
-    // Bind parameters and execute the query
+    $query = $dbh->prepare($sql);
     $query->bindParam(':schemename', $schemename, PDO::PARAM_STR);
     $query->bindParam(':yearofsch', $yearofsch, PDO::PARAM_STR);
     $query->bindParam(':lastdate', $lastdate, PDO::PARAM_STR);
     $query->bindParam(':schfee', $schfee, PDO::PARAM_STR);
-    $query->bindParam(':eid', $eid, PDO::PARAM_STR);
+    $query->bindParam(':department', $department, PDO::PARAM_STR);
+    $query->bindParam(':requirements', $requirementsString, PDO::PARAM_STR);
+    if ($imagePath) {
+        $query->bindParam(':image', $imagePath, PDO::PARAM_STR);
+    }
+    $query->bindParam(':eid', $eid, PDO::PARAM_INT);
     $query->execute();
-
-    // Update requirements in the database
-    $updateRequirementsSql = "UPDATE tblscheme SET Requirements = :requirements WHERE ID = :eid";
-    $updateRequirementsQuery = $dbh->prepare($updateRequirementsSql);
-    $updateRequirementsQuery->bindParam(':requirements', $requirementsString, PDO::PARAM_STR);
-    $updateRequirementsQuery->bindParam(':eid', $eid, PDO::PARAM_STR);
-    $updateRequirementsQuery->execute();
 
     echo '<script>alert("Scheme detail has been updated"); window.location.href="manage-scheme.php";</script>';
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -170,6 +170,16 @@ if (isset($_POST['submit'])) {
                         <div class="form-group">
                             <label for="schfee">Scholarship Tuition Fee</label>
                             <textarea class="form-control" id="schfee" name="schfee" required><?php echo htmlentities($row->Scholarfee); ?></textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="department">Select Department</label>
+                          <select id="department" name="department" class="form-control" required>
+                              <option value="" disabled>--Select Department--</option>
+                              <option value="College" <?php echo ($row->department == 'College') ? 'selected' : ''; ?>>College</option>
+                              <option value="Basic Ed" <?php echo ($row->department == 'Basic Ed') ? 'selected' : ''; ?>>Basic Ed</option>
+                              <option value="Employee" <?php echo ($row->department == 'Employee') ? 'selected' : ''; ?>>Employee</option>
+                          </select>
                         </div>
 
                         <div class="form-group">

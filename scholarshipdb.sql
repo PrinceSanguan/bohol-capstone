@@ -162,14 +162,14 @@ CREATE TABLE `tblscheme` (
 --
 
 INSERT INTO `tblscheme` (`ID`, `SchemeName`, `Yearofscholarship`, `LastDate`, `Scholarfee`, `PublishedDate`, `Image`, `Requirements`, `department`) VALUES
-(25, 'Employee, Legal Spouse, Children, and Dependents', '2024-2025', '2026-01-31', '(50% Tuition Fee Discount)', '2024-10-24 05:13:15', 'uploads/mlogo.png', 'Letter of Intent, Marriage Certificate(If grantee is the legal spouse), Validated Student\'s Enrollment Copy, Children\'s PSA Birth Certificate, Authority to Deduct Form', ''),
-(28, 'Employee Siblings, Relatives, and Working Students', '2024-2025', '2026-01-31', '(25% Tuition Fee Discount)', '2024-10-24 06:01:02', 'uploads/mlogo.png', 'Letter of Intent, Validated Student\'s Enrollment Copy, Authority to Deduct Form, Original Copy of Certification from the Brgy. Captain as evidence of their relationship', ''),
-(29, 'Top 3 with Highest Honor Students', '2024-2025', '2026-01-31', ' (Top 1-100% tuition fee discount; Top 2 -75% tuition fee discount; Top 3- 50% tuition fee discount)', '2024-10-24 06:03:17', 'uploads/mlogo.png', 'Letter of Intent, Validated Student\'s Enrollment Copy, Original Copy of Certification from the SHS Principal as evidence of being Top 3 with Highest Honor Student in their school', ''),
-(30, 'Dean\'s Lister', '2026-01-31', '2026-01-31', ' (100% tuition fee discount with an average of 1.0-1.2 with no rating below 1.3 for one semester availment)\r\n( 75% tuition fee discount with an average of 1.3-1.4 with no rating below 1.5 for one semester availment)  \r\n(50% tuition fee discount with an average of 1.5 with no rating below 2.0 for one semester availment)', '2024-10-24 06:05:16', 'uploads/mlogo.png', 'Letter of Intent, Validated Student\'s Enrollment Copy, Rating Card of the two (2) previous semesters, New applicants only. Rating Card of the previous semesters for continuing grantees, Rating Card of the previous semester', ''),
-(31, 'NON-ACADEMIC SCHOLARSHIP', '2026-01-31', '2026-01-31', 'Provincial Athlete (10% Tuition Fee Discount)\r\nRegional Athlete (20% Tuition Fee Discount) \r\nNational Athlete (30% Tuition Fee Discount)', '2024-10-24 06:08:24', 'uploads/mlogo.png', 'Letter of Intent, Validated Student\'s Enrollment Copy, Endorsement Letter from the Athletic Coordinator, Rating Card of the previous semester, Proof of Competition in Provincial, Regional, National Level', ''),
-(32, 'Sidlak Performing Arts Group and Publication Staff', '2026-01-31', '2026-01-31', '(10% Tuition Fee Discount)', '2024-10-24 06:10:19', 'uploads/mlogo.png', 'Letter of Intent, Validated Student\'s Enrollment Copy, Rating Card of the previous semester, Endorsement Letter from the SIPAG Coordinator and from Publication Adviser with their corresponding Performance Rating', ''),
-(48, 'Tertriay Education Subsidy(TES)', '2024-2025', '2025-05-01', 'Php10,000.00 per sem', '2024-11-01 03:00:19', 'uploads/tes.jpg', 'Barangay Residency , School I.D with specimen signature, Valid I.D', ''),
-(49, 'Tulong Dunong Program (TDP)', '2024-2025', '2025-02-01', 'PhP 7,500.00', '2024-11-01 03:02:46', 'uploads/tes.jpg', 'Barangay Residency , School I.D with specimen signature, Valid I.D', '');
+(25, 'Employee, Legal Spouse, Children, and Dependents', '2024-2025', '2026-01-31', '(50% Tuition Fee Discount)', '2024-10-24 05:13:15', 'uploads/mlogo.png', 'Letter of Intent, Marriage Certificate(If grantee is the legal spouse), Validated Student\'s Enrollment Copy, Children\'s PSA Birth Certificate, Authority to Deduct Form', 'College'),
+(28, 'Employee Siblings, Relatives, and Working Students', '2024-2025', '2026-01-31', '(25% Tuition Fee Discount)', '2024-10-24 06:01:02', 'uploads/mlogo.png', 'Letter of Intent, Validated Student\'s Enrollment Copy, Authority to Deduct Form, Original Copy of Certification from the Brgy. Captain as evidence of their relationship', 'College'),
+(29, 'Top 3 with Highest Honor Students', '2024-2025', '2026-01-31', ' (Top 1-100% tuition fee discount; Top 2 -75% tuition fee discount; Top 3- 50% tuition fee discount)', '2024-10-24 06:03:17', 'uploads/mlogo.png', 'Letter of Intent, Validated Student\'s Enrollment Copy, Original Copy of Certification from the SHS Principal as evidence of being Top 3 with Highest Honor Student in their school', 'College'),
+(30, 'Dean\'s Lister', '2026-01-31', '2026-01-31', ' (100% tuition fee discount with an average of 1.0-1.2 with no rating below 1.3 for one semester availment)\r\n( 75% tuition fee discount with an average of 1.3-1.4 with no rating below 1.5 for one semester availment)  \r\n(50% tuition fee discount with an average of 1.5 with no rating below 2.0 for one semester availment)', '2024-10-24 06:05:16', 'uploads/mlogo.png', 'Letter of Intent, Validated Student\'s Enrollment Copy, Rating Card of the two (2) previous semesters, New applicants only. Rating Card of the previous semesters for continuing grantees, Rating Card of the previous semester', 'Basic Ed'),
+(31, 'NON-ACADEMIC SCHOLARSHIP', '2026-01-31', '2026-01-31', 'Provincial Athlete (10% Tuition Fee Discount)\r\nRegional Athlete (20% Tuition Fee Discount) \r\nNational Athlete (30% Tuition Fee Discount)', '2024-10-24 06:08:24', 'uploads/mlogo.png', 'Letter of Intent, Validated Student\'s Enrollment Copy, Endorsement Letter from the Athletic Coordinator, Rating Card of the previous semester, Proof of Competition in Provincial, Regional, National Level', 'Basic Ed'),
+(32, 'Sidlak Performing Arts Group and Publication Staff', '2026-01-31', '2026-01-31', '(10% Tuition Fee Discount)', '2024-10-24 06:10:19', 'uploads/mlogo.png', 'Letter of Intent, Validated Student\'s Enrollment Copy, Rating Card of the previous semester, Endorsement Letter from the SIPAG Coordinator and from Publication Adviser with their corresponding Performance Rating', 'Basic Ed'),
+(48, 'Tertriay Education Subsidy(TES)', '2024-2025', '2025-05-01', 'Php10,000.00 per sem', '2024-11-01 03:00:19', 'uploads/tes.jpg', 'Barangay Residency , School I.D with specimen signature, Valid I.D', 'Employee'),
+(49, 'Tulong Dunong Program (TDP)', '2024-2025', '2025-02-01', 'PhP 7,500.00', '2024-11-01 03:02:46', 'uploads/tes.jpg', 'Barangay Residency , School I.D with specimen signature, Valid I.D', 'Employee');
 
 -- --------------------------------------------------------
 
@@ -178,7 +178,7 @@ INSERT INTO `tblscheme` (`ID`, `SchemeName`, `Yearofscholarship`, `LastDate`, `S
 --
 
 CREATE TABLE `tbluser` (
-  `ID` int(10) NOT NULL,
+  `ID` int(10) NOT NULL AUTO_INCREMENT,
   `SchoolID` varchar(11) DEFAULT NULL,
   `FirstName` varchar(255) NOT NULL,
   `MiddleName` varchar(255) NOT NULL,
@@ -197,7 +197,8 @@ CREATE TABLE `tbluser` (
   `Password` varchar(250) DEFAULT NULL,
   `RegDate` timestamp NULL DEFAULT current_timestamp(),
   `Photo` varchar(255) DEFAULT NULL,
-  `department` varchar(10) NOT NULL
+  `department` varchar(10) NOT NULL,
+  PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
@@ -205,9 +206,9 @@ CREATE TABLE `tbluser` (
 --
 
 INSERT INTO `tbluser` (`ID`, `SchoolID`, `FirstName`, `MiddleName`, `LastName`, `SuffixName`, `MobileNumber`, `Course`, `Citizenship`, `CivilStatus`, `YearLevel`, `DateofBirth`, `Gender`, `Address`, `ZipCode`, `Email`, `Password`, `RegDate`, `Photo`, `department`) VALUES
-(55, '20182017', 'Liam', 'Omigan', 'Lingo', '', 9546415455, 'BSCS', 'filipino', 'Single', '1st Year', '2018-05-01', 'Male', 'bibas', '6315', 'liam@gmail.com', '$2y$10$XyofzTwa2K2xgGcUw8HTPexVNyo.Q5cPApE/8fl1uvyQwkqjapIw.', '2024-10-26 14:32:01', 'WIN_20240721_10_15_19_Pro.jpg', ''),
-(56, '201801729', 'Dhejay', 'Gwapo', 'Domaun', '', 9505647101, 'BSIT', 'Filipino', 'Married', '4th Year', '1913-01-05', 'Male', 'Poblacion', '6315', 'domaun@gmail.com', '$2y$10$mLqiUOdDTov3lYsqEix8BuDmjtt37QXO8CCsdyT9/Yko9uSynJA06', '2024-10-28 08:27:17', 'images.jpeg', ''),
-(58, '20192014', 'ella', 'omigan', 'lingo', '', 9505647101, 'BSCS', 'filipino', 'Single', '3rd Year', '2003-01-29', 'Male', 'bibas', '6315', 'ella21@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '2024-11-06 16:06:20', 'stu5.jpg', ''),
+(55, '20182017', 'Liam', 'Omigan', 'Lingo', '', 9546415455, 'BSCS', 'filipino', 'Single', '1st Year', '2018-05-01', 'Male', 'bibas', '6315', 'liam@gmail.com', '$2y$10$XyofzTwa2K2xgGcUw8HTPexVNyo.Q5cPApE/8fl1uvyQwkqjapIw.', '2024-10-26 14:32:01', 'WIN_20240721_10_15_19_Pro.jpg', 'Employee'),
+(56, '201801729', 'Dhejay', 'Gwapo', 'Domaun', '', 9505647101, 'BSIT', 'Filipino', 'Married', '4th Year', '1913-01-05', 'Male', 'Poblacion', '6315', 'domaun@gmail.com', '$2y$10$mLqiUOdDTov3lYsqEix8BuDmjtt37QXO8CCsdyT9/Yko9uSynJA06', '2024-10-28 08:27:17', 'images.jpeg', 'Employee'),
+(58, '20192014', 'ella', 'omigan', 'lingo', '', 9505647101, 'BSCS', 'filipino', 'Single', '3rd Year', '2003-01-29', 'Male', 'bibas', '6315', 'ella21@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '2024-11-06 16:06:20', 'stu5.jpg', 'College'),
 (62, '2018201999', 'jovy', 'ad', 'sdf', '', 9055486951, 'BSIT', 'Filipino', 'Single', '1st Year', '2029-01-01', 'Female', 'Fatima, Ubay, Bohol', '6315', 'sdidwio@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '2024-11-29 06:20:30', 'constant.jpg', 'College'),
 (63, '201820199', 'Dianne Kathlyn', 'Boyles', 'Corrales', '', 9055486951, 'BSIT', 'Filipino', 'Single', '2nd Year', '2000-01-20', 'Female', 'Fatima, Ubay, Bohol', '6315', 'dayankathlyncorales@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '2024-11-29 06:44:05', 'dklove.jpg', 'Basic Ed'),
 (64, '20172018', 'wilmayz', 's', 'sdff', '', 9505647101, 'BSIT', 'Filipino', 'Single', '2nd Year', '2000-01-20', 'Female', 'Fatima, Ubay, Bohol', '6315', 'alvin100golosino@gmail.com', 'e10adc3949ba59abbe56e057f20f883e', '2024-11-29 06:53:38', 'lovie.jpg', 'College');

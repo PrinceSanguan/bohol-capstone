@@ -10,7 +10,7 @@ if (strlen($_SESSION['uid']) == 0) {
     $user_department = $_SESSION['department']; // Fetching user's department from session
 
     if (isset($_POST['submit'])) {
-        $appnum = mt_rand(100000000, 999999999);
+        $appnum = mt_rand(100000000, 999999999); // Generate random application number
         $schemeid = intval($_GET['viewid']);
         $uid = $_SESSION['uid'];
         $doc = $_FILES["reqdoc"]["name"];
@@ -35,8 +35,9 @@ if (strlen($_SESSION['uid']) == 0) {
                 echo "<script>alert('Already Applied for this scholarship');</script>";
                 echo "<script>window.location.href ='views-scheme.php'</script>";
             } else {
-                // Insert the application
-                $sql = "INSERT INTO tblapply(SchemeId, ApplicationNumber, UserID, DocReq) VALUES(:schemeid, :appnum, :uid, :doc)";
+                // Insert the application with default status as 'Pending'
+                $sql = "INSERT INTO tblapply(SchemeId, ApplicationNumber, UserID, DocReq, Status) 
+                        VALUES(:schemeid, :appnum, :uid, :doc, 'Pending')";
                 $query = $dbh->prepare($sql);
                 $query->bindParam(':schemeid', $schemeid, PDO::PARAM_STR);
                 $query->bindParam(':appnum', $appnum, PDO::PARAM_STR);
@@ -54,6 +55,7 @@ if (strlen($_SESSION['uid']) == 0) {
             }
         }
     }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -242,4 +244,3 @@ if (strlen($_SESSION['uid']) == 0) {
     <script src="../assets/js/app-script.js"></script>
 </body>
 </html>
-<?php } ?>

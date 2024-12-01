@@ -2,6 +2,12 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
+require '../vendor/autoload.php'; // Make sure to install PHPMailer via Composer
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
 if (strlen($_SESSION['aid'] == 0)) {
     header('location:logout.php');
 } else {
@@ -9,23 +15,80 @@ if (strlen($_SESSION['aid'] == 0)) {
         $viewid = $_GET['viewid'];
         $Status = $_POST['status'];
         $Remark = $_POST['remark'];
-
+        
+        // First update the status in database
         $sql = "UPDATE tblapply SET 
             status = :Status,
-            remark = :Remark
+            remark = :Remark,
+            UpdationDate = CURRENT_TIMESTAMP
             WHERE ID = :viewid";
-
+        
         $query = $dbh->prepare($sql);
         $query->bindParam(':Status', $Status, PDO::PARAM_STR);
         $query->bindParam(':Remark', $Remark, PDO::PARAM_STR);
         $query->bindParam(':viewid', $viewid, PDO::PARAM_STR);
-        $query->execute();
-
-        echo '<script>alert("Remark has been updated")</script>';
-        echo "<script>window.location.href ='all-application.php'</script>";
+        
+        if ($query->execute()) {
+            // Get user details for email
+            $sql = "SELECT u.FirstName, u.LastName, u.Email 
+                   FROM tbluser u 
+                   INNER JOIN tblapply a ON u.ID = a.UserID 
+                   WHERE a.ID = :viewid";
+            
+            $query = $dbh->prepare($sql);
+            $query->bindParam(':viewid', $viewid, PDO::PARAM_STR);
+            $query->execute();
+            $userDetails = $query->fetch(PDO::FETCH_ASSOC);
+            
+            if ($userDetails) {
+                // Create new PHPMailer instance
+                $mail = new PHPMailer(true);
+                
+                try {
+                    // Server settings
+                    $mail->isSMTP();
+                    $mail->Host = 'smtp.gmail.com';
+                    $mail->SMTPAuth = true;
+                    $mail->Username = 'lingowilmay29@gmail.com'; // Replace with your Gmail
+                    $mail->Password = 'gwnh jqox dnfh bfar'; // Your app password
+                    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+                    $mail->Port = 587;
+                    
+                    // Recipients
+                    $mail->setFrom('lingowilmay29@gmail.com', 'BNSCSCHOLARSHIPSYSTEM');
+                    $mail->addAddress($userDetails['Email']);
+                    
+                    // Content
+                    $mail->isHTML(true);
+                    $mail->Subject = 'Application Status Update';
+                    
+                    // Email body
+                    $body = "Dear " . htmlspecialchars($userDetails['FirstName']) . " " . 
+                           htmlspecialchars($userDetails['LastName']) . ",<br><br>";
+                    $body .= "Your application is <b>" . htmlspecialchars($Status) . "</b> ";
+                    if (!empty($Remark)) {
+                        $body .= "because of: " . htmlspecialchars($Remark);
+                    }
+                    $body .= "<br><br>Best regards,<br>BNSCSCHOLARSHIPSYSTEM";
+                    
+                    $mail->Body = $body;
+                    $mail->send();
+                    
+                    echo '<script>alert("Status has been updated and email notification sent")</script>';
+                } catch (Exception $e) {
+                    echo '<script>alert("Status updated but email could not be sent. Error: ' . 
+                         $mail->ErrorInfo . '")</script>';
+                }
+            }
+            
+            echo "<script>window.location.href ='all-application.php'</script>";
+        } else {
+            echo '<script>alert("Something went wrong. Please try again.")</script>';
+        }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -221,15 +284,9 @@ if (strlen($_SESSION['aid'] == 0)) {
                                     <th>Status :</th>
                                     <td>
                                         <select name="status" class="form-control wd-450" required="true">
-                                            
-                                            <option value="Approved" <?php if ($row->Status == "Approved") {
-                                                echo "selected";
-                                            } ?>>Approved
-                                            </option>
-                                            <option value="Rejected" <?php if ($row->Status == "Rejected") {
-                                                echo "selected";
-                                            } ?>>Rejected
-                                            </option>
+                                            <option value="" disabled selected>--Select status--</option>
+                                            <option value="Approved">Approved</option>
+                                            <option value="Rejected">Rejected</option>
                                         </select>
                                     </td>
                                 </tr>

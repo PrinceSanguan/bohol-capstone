@@ -2,92 +2,99 @@
 session_start();
 error_reporting(0);
 include('includes/dbconnection.php');
-if (strlen($_SESSION['aid'] == 0)) {
+
+if (strlen($_SESSION['aid']) == 0) {
     header('location:logout.php');
-} else {
+    exit();
+}
 
-    if ($_GET['del']) {
-        $uid = $_GET['del'];
-        $sql = "DELETE FROM tbluser WHERE ID='$uid'";
-        $query = $dbh->prepare($sql);
-        $query->execute();
-        echo "<script>alert('Data Deleted');</script>";
-        echo "<script>window.location.href='reg-users.php'</script>";
-    }
+if ($_GET['del']) {
+    $uid = $_GET['del'];
+    $sql = "DELETE FROM tbluser WHERE ID=:uid";
+    $query = $dbh->prepare($sql);
+    $query->bindParam(':uid', $uid, PDO::PARAM_INT);
+    $query->execute();
+    echo "<script>alert('Data Deleted');</script>";
+    echo "<script>window.location.href='reg-users.php'</script>";
+}
 
-    if (isset($_POST['submit'])) {
-        // Handle form submission from the modal
-        $fname = $_POST['fname'];
-        $mname = $_POST['mname'] ?? '';
-        $lname = $_POST['lname'];
-        $suffix = $_POST['suffix'] ?? '';
-        $schoolid = $_POST['schoolid'];
-        $mobno = $_POST['mobno'];
-        $course = $_POST['course'];
-        $dob = $_POST['dob'];
-        $gender = $_POST['gender'];
-        $cship = $_POST['cship'];
-        $cstatus = $_POST['cstatus'];
-        $yrlevel = $_POST['yrlevel'];
-        $address = $_POST['address'];
-        $zipcode = $_POST['zipcode'];
-        $email = $_POST['email'];
-        $password = md5($_POST['password']);
-        $department = $_POST['department'];
-        
-        $photo = $_FILES['photo']['name'];
-        $photo_tmp = $_FILES['photo']['tmp_name'];
-        $photo_folder = "../uploads/" . basename($photo);
+if (isset($_POST['submit'])) {
+    $fname = $_POST['fname'];
+    $mname = $_POST['mname'] ?? '';
+    $lname = $_POST['lname'];
+    $suffix = $_POST['suffix'] ?? '';
+    $schoolid = $_POST['schoolid'];
+    $mobno = $_POST['mobno'];
+    $course = $_POST['course'];
+    $dob = $_POST['dob'];
+    $gender = $_POST['gender'];
+    $cship = $_POST['cship'];
+    $cstatus = $_POST['cstatus'];
+    $yrlevel = $_POST['yrlevel'];
+    $address = $_POST['address'];
+    $zipcode = $_POST['zipcode'];
+    $email = $_POST['email'];
+    $password = md5($_POST['password']);
+    $department = $_POST['department'];
     
-        try {
-            $ret = "SELECT Email, SchoolID FROM tbluser WHERE Email=:email OR SchoolID=:SchoolID";
-            $query = $dbh->prepare($ret);
-            $query->bindParam(':email', $email, PDO::PARAM_STR);
-            $query->bindParam(':SchoolID', $schoolid, PDO::PARAM_STR);
-            $query->execute();
-            
-            if ($query->rowCount() == 0) {
-                if ($_FILES['photo']['error'] == UPLOAD_ERR_OK && move_uploaded_file($photo_tmp, $photo_folder)) {
-                    $sql = "INSERT INTO tbluser (FirstName, MiddleName, LastName, SuffixName, SchoolID, MobileNumber, Course, DateofBirth, Gender, Citizenship, CivilStatus, YearLevel, Address, ZipCode, Email, Password, Photo,department) 
-                            VALUES (:fname, :mname, :lname, :suffix, :schoolid, :mobno, :course, :dob, :gender, :cship, :cstatus, :yrlevel, :address, :zipcode, :email, :password, :photo,:department)";
-                    $query = $dbh->prepare($sql);
-                    $query->bindParam(':fname', $fname, PDO::PARAM_STR);
-                    $query->bindParam(':mname', $mname, PDO::PARAM_STR);
-                    $query->bindParam(':lname', $lname, PDO::PARAM_STR);
-                    $query->bindParam(':suffix', $suffix, PDO::PARAM_STR);
-                    $query->bindParam(':schoolid', $schoolid, PDO::PARAM_STR);
-                    $query->bindParam(':mobno', $mobno, PDO::PARAM_INT);
-                    $query->bindParam(':course', $course, PDO::PARAM_STR);
-                    $query->bindParam(':dob', $dob, PDO::PARAM_STR);
-                    $query->bindParam(':gender', $gender, PDO::PARAM_STR);
-                    $query->bindParam(':cship', $cship, PDO::PARAM_STR);
-                    $query->bindParam(':cstatus', $cstatus, PDO::PARAM_STR);
-                    $query->bindParam(':yrlevel', $yrlevel, PDO::PARAM_STR);
-                    $query->bindParam(':address', $address, PDO::PARAM_STR);
-                    $query->bindParam(':zipcode', $zipcode, PDO::PARAM_STR);
-                    $query->bindParam(':email', $email, PDO::PARAM_STR);
-                    $query->bindParam(':password', $password, PDO::PARAM_STR);
-                    $query->bindParam(':photo', basename($photo), PDO::PARAM_STR);
-                    $query->bindParam(':department', basename($department), PDO::PARAM_STR);
-                    $query->execute();
-                    
-                    $lastInsertId = $dbh->lastInsertId();
-                    if ($lastInsertId) {
-                        echo "<script>alert('You have successfully registered with us');</script>";
-                        echo "<script>window.location.href='reg-users.php'</script>";
-                    } else {
-                        echo "<script>alert('Something went wrong. Please try again');</script>";
-                    }
-                } else {
-                    echo "<script>alert('Failed to upload the file.');</script>";
-                }
+    $photo = $_FILES['photo']['name'];
+    $photo_tmp = $_FILES['photo']['tmp_name'];
+    $photo_folder = "../uploads/" . basename($photo);
+
+    try {
+        // Check for duplicate Email or SchoolID
+        $ret = "SELECT Email, SchoolID FROM tbluser WHERE Email=:email OR SchoolID=:SchoolID";
+        $query = $dbh->prepare($ret);
+        $query->bindParam(':email', $email, PDO::PARAM_STR);
+        $query->bindParam(':SchoolID', $schoolid, PDO::PARAM_STR);
+        $query->execute();
+        
+        if ($query->rowCount() == 0) {
+            // Upload photo
+            if (!empty($photo) && move_uploaded_file($photo_tmp, $photo_folder)) {
+                $photoName = basename($photo);
             } else {
-                echo "<script>alert('Email ID or School ID already exists. Please try again');</script>";
+                $photoName = null; // Handle case where no photo is uploaded
             }
-        } catch (PDOException $e) {
-            echo "Error: " . $e->getMessage();
+
+            // Insert data into tbluser
+            $sql = "INSERT INTO tbluser (FirstName, MiddleName, LastName, SuffixName, SchoolID, MobileNumber, Course, DateofBirth, Gender, Citizenship, CivilStatus, YearLevel, Address, ZipCode, Email, Password, Photo, department) 
+                    VALUES (:fname, :mname, :lname, :suffix, :schoolid, :mobno, :course, :dob, :gender, :cship, :cstatus, :yrlevel, :address, :zipcode, :email, :password, :photo, :department)";
+            $query = $dbh->prepare($sql);
+            $query->bindParam(':fname', $fname, PDO::PARAM_STR);
+            $query->bindParam(':mname', $mname, PDO::PARAM_STR);
+            $query->bindParam(':lname', $lname, PDO::PARAM_STR);
+            $query->bindParam(':suffix', $suffix, PDO::PARAM_STR);
+            $query->bindParam(':schoolid', $schoolid, PDO::PARAM_STR);
+            $query->bindParam(':mobno', $mobno, PDO::PARAM_INT);
+            $query->bindParam(':course', $course, PDO::PARAM_STR);
+            $query->bindParam(':dob', $dob, PDO::PARAM_STR);
+            $query->bindParam(':gender', $gender, PDO::PARAM_STR);
+            $query->bindParam(':cship', $cship, PDO::PARAM_STR);
+            $query->bindParam(':cstatus', $cstatus, PDO::PARAM_STR);
+            $query->bindParam(':yrlevel', $yrlevel, PDO::PARAM_STR);
+            $query->bindParam(':address', $address, PDO::PARAM_STR);
+            $query->bindParam(':zipcode', $zipcode, PDO::PARAM_STR);
+            $query->bindParam(':email', $email, PDO::PARAM_STR);
+            $query->bindParam(':password', $password, PDO::PARAM_STR);
+            $query->bindParam(':photo', $photoName, PDO::PARAM_STR);
+            $query->bindParam(':department', $department, PDO::PARAM_STR);
+            $query->execute();
+
+            $lastInsertId = $dbh->lastInsertId();
+            if ($lastInsertId) {
+                echo "<script>alert('You have successfully registered with us');</script>";
+                echo "<script>window.location.href='reg-users.php'</script>";
+            } else {
+                echo "<script>alert('Something went wrong. Please try again');</script>";
+            }
+        } else {
+            echo "<script>alert('Email ID or School ID already exists. Please try again');</script>";
         }
+    } catch (PDOException $e) {
+        echo "Error: " . $e->getMessage();
     }
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -472,13 +479,14 @@ if (strlen($_SESSION['aid'] == 0)) {
             </div>
           </div>
           <div class="form-group">
-  <label for="department">Select Department</label>
-  <select id="department" name="department" class="form-control" required>
-    <option value="College">College</option>
-    <option value="Basic Ed">Basic Ed</option>
-    <option value="Employee">Employee</option>
-  </select>
-</div>
+              <label for="department">Select Department</label>
+              <select id="department" name="department" class="form-control" required>
+                  <option value="" disabled selected>--Select Department--</option>
+                  <option value="College">College</option>
+                  <option value="Basic Ed">Basic Ed</option>
+                  <option value="Employee">Employee</option>
+              </select>
+          </div>
           <div class="form-row">
             <div class="form-group">
               <label>Upload Photo</label>
@@ -536,4 +544,3 @@ function togglePasswordVisibility() {
 
 </body>
 </html>
-<?php } ?>

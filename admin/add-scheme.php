@@ -12,7 +12,7 @@ if (strlen($_SESSION['aid']) == 0) {
         $yearofsch = $_POST['yearofsch'];
         $lastdate = $_POST['lastdate'];
         $schfee = $_POST['schfee'];
-        $deparment = $_POST['deparment'];
+        $deparment = $_POST['department'];
         $requirements = isset($_POST['requirements']) ? $_POST['requirements'] : []; // Ensure it's an array
 
         // Handle the image upload
@@ -204,13 +204,13 @@ if (strlen($_SESSION['aid']) == 0) {
                     <button type="button" class="btn btn-secondary mt-2" data-toggle="modal" data-target="#addRequirementModal">Add Requirement</button>
                   </div>
                   <div class="form-group">
-  <label for="department">Select Department</label>
-  <select id="department" name="department" class="form-control" required>
-    <option value="College">College</option>
-    <option value="Basic Ed">Basic Ed</option>
-    <option value="Employee">Employee</option>
-  </select>
-</div>
+                    <label for="department">Select Department</label>
+                    <select id="department" name="department" class="form-control" required>
+                      <option value="College">College</option>
+                      <option value="Basic Ed">Basic Ed</option>
+                      <option value="Employee">Employee</option>
+                    </select>
+                  </div>
 
                       
                   <div class="form-group">

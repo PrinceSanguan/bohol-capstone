@@ -67,42 +67,61 @@ $img = $_SESSION['img'];
             <div class="card-body">
               <h5 class="card-title">View Scholarship </h5>
               <div class="table-responsive">
-                <table class="table" id="myTable">
-                  <thead>
+              <table class="table" id="myTable">
+                <thead>
                     <tr>
-                      <th scope="col">#</th>
-                      <th scope="col">Name of Scholarship</th>
-                      <th scope="col">Last Date</th>
-                      <th scope="col">Published Date</th>
-                      <th scope="col">Action</th>
-                    
+                        <th scope="col">#</th>
+                        <th scope="col">Name of Scholarship</th>
+                        <th scope="col">Last Date</th>
+                        <th scope="col">Published Date</th>
+                        <th scope="col">Action</th>
                     </tr>
-                  </thead>
-                  <tbody>
+                </thead>
+                <tbody>
                     <?php
-$sql="SELECT * from tblscheme";
-$query = $dbh -> prepare($sql);
-$query->execute();
-$results=$query->fetchAll(PDO::FETCH_OBJ);
+                    // Assuming $userId is the ID of the logged-in user
+                    $userId = $_SESSION['uid']; // Replace with actual user session or ID
 
-$cnt=1;
-if($query->rowCount() > 0)
-{
-foreach($results as $row)
-{               ?>
-                    <tr>
-                                                <td><?php echo htmlentities($cnt);?></td>
-                                                <td><?php  echo htmlentities($row->SchemeName);?></td>
-                                                
-                                                <td><?php  echo htmlentities($row->LastDate);?></td>
-                                                <td><?php  echo htmlentities($row->PublishedDate);?></td>
-                                                <td><a href="view-scheme-detail.php?viewid=<?php echo htmlentities ($row->ID);?>" class="btn btn-primary btn-sm">View Detail
-                                                </a>
-                                                </td>
-                                            </tr>
-                                    <?php $cnt=$cnt+1;}} ?>                    
-                  </tbody>
-                </table>
+                    // Query to fetch scholarships matching the user's department
+                    $sql = "
+                        SELECT tblscheme.* 
+                        FROM tblscheme 
+                        INNER JOIN tbluser 
+                        ON tbluser.department = tblscheme.department 
+                        WHERE tbluser.ID = :uid
+                    ";
+                    $query = $dbh->prepare($sql);
+                    $query->bindParam(':uid', $userId, PDO::PARAM_INT);
+                    $query->execute();
+                    $results = $query->fetchAll(PDO::FETCH_OBJ);
+
+                    $cnt = 1;
+
+                    if ($query->rowCount() > 0) {
+                        foreach ($results as $row) {
+                            // Handle potential NULL values
+                            $schemeName = htmlentities($row->SchemeName ?? 'N/A');
+                            $lastDate = htmlentities($row->LastDate ?? 'N/A');
+                            $publishedDate = htmlentities($row->PublishedDate ?? 'N/A');
+                            ?>
+                            <tr>
+                                <td><?php echo $cnt; ?></td>
+                                <td><?php echo $schemeName; ?></td>
+                                <td><?php echo $lastDate; ?></td>
+                                <td><?php echo $publishedDate; ?></td>
+                                <td>
+                                    <a href="view-scheme-detail.php?viewid=<?php echo htmlentities($row->ID); ?>" class="btn btn-primary btn-sm">
+                                        View Detail
+                                    </a>
+                                </td>
+                            </tr>
+                            <?php
+                            $cnt++;
+                        }
+                    }
+                    ?>
+                </tbody>
+              </table>
               </div>
             </div>
           </div>

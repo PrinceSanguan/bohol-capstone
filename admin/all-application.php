@@ -81,30 +81,30 @@ if (strlen($_SESSION['aid']) == 0) {
               </div>
 
               <div class="table-responsive">
-                <table class="table" id="myTable">
-                  <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Application Number</th>
-                    <th scope="col">Name of Scholarship</th>
-                    <th scope="col">First Name</th>
-                    <th scope="col">Middle Name</th>
-                    <th scope="col">Last Name</th>
-                    <th scope="col">Gender</th>
-                    <th scope="col">Birthdate</th>
-                    <th scope="col">Degree Program</th>
-                    <th scope="col">Year Level</th>
-                    <th scope="col">Zip Code</th>
-                    <th scope="col">E-mail Address</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Action</th>
-                  </tr>
-                  </thead>
-                  <tbody id="applicationTableBody">
+              <table class="table" id="myTable">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Application Number</th>
+                        <th scope="col">Name of Scholarship</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Middle Name</th>
+                        <th scope="col">Last Name</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Birthdate</th>
+                        <th scope="col">Degree Program</th>
+                        <th scope="col">Year Level</th>
+                        <th scope="col">Zip Code</th>
+                        <th scope="col">E-mail Address</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="applicationTableBody">
                     <?php
                     $sql = "SELECT tbluser.ID as uid, tbluser.FirstName, tbluser.MiddleName, tbluser.LastName, tbluser.Gender,
-                    tbluser.DateofBirth, tbluser.Course, tbluser.YearLevel, tbluser.ZipCode,
-                    tbluser.Email, tblscheme.ID as sid, tblscheme.SchemeName, tblapply.ID as appid, tblapply.ApplicationNumber, tblapply.Status 
+                            tbluser.DateofBirth, tbluser.Course, tbluser.YearLevel, tbluser.ZipCode,
+                            tbluser.Email, tblscheme.ID as sid, tblscheme.SchemeName, tblapply.ID as appid, tblapply.ApplicationNumber, tblapply.Status 
                             FROM tblapply 
                             JOIN tbluser ON tblapply.UserID = tbluser.ID 
                             JOIN tblscheme ON tblapply.SchemeId = tblscheme.ID";
@@ -115,20 +115,20 @@ if (strlen($_SESSION['aid']) == 0) {
                     $cnt = 1;
                     if ($query->rowCount() > 0) {
                         foreach ($results as $row) { ?>
-                          <tr>
-                          <td><?php echo htmlentities($cnt); ?></td>
-                          <td><?php echo htmlentities($row->ApplicationNumber); ?></td>
-                          <td><?php echo htmlentities($row->SchemeName); ?></td>
-                          <td><?php echo htmlentities($row->FirstName); ?></td>
-                          <td><?php echo htmlentities($row->MiddleName); ?></td>
-                          <td><?php echo htmlentities($row->LastName); ?></td>
-                          <td><?php echo htmlentities($row->Gender); ?></td>
-                          <td><?php echo htmlentities($row->DateofBirth); ?></td>
-                          <td><?php echo htmlentities($row->Course); ?></td>
-                          <td><?php echo htmlentities($row->YearLevel); ?></td>
-                          <td><?php echo htmlentities($row->ZipCode); ?></td>
-                          <td><?php echo htmlentities($row->Email); ?></td>
-                          <td>
+                            <tr>
+                                <td><?php echo htmlentities($cnt); ?></td>
+                                <td><?php echo htmlentities($row->ApplicationNumber); ?></td>
+                                <td><?php echo htmlentities($row->SchemeName); ?></td>
+                                <td><?php echo htmlentities($row->FirstName); ?></td>
+                                <td><?php echo htmlentities($row->MiddleName); ?></td>
+                                <td><?php echo htmlentities($row->LastName); ?></td>
+                                <td><?php echo htmlentities($row->Gender); ?></td>
+                                <td><?php echo htmlentities($row->DateofBirth); ?></td>
+                                <td><?php echo htmlentities($row->Course); ?></td>
+                                <td><?php echo htmlentities($row->YearLevel); ?></td>
+                                <td><?php echo htmlentities($row->ZipCode); ?></td>
+                                <td><?php echo htmlentities($row->Email); ?></td>
+                                <td>
                                     <?php if (empty($row->Status)) { ?>
                                         <span class="font-w600">Not Updated Yet</span>
                                     <?php } else { ?>
@@ -140,7 +140,6 @@ if (strlen($_SESSION['aid']) == 0) {
                                             case 'Rejected':
                                                 echo '<span class="badge badge-danger">' . htmlentities($row->Status) . '</span>';
                                                 break;
-                                           
                                             default:
                                                 echo '<span class="badge badge-secondary">' . htmlentities($row->Status) . '</span>';
                                         }
@@ -148,7 +147,11 @@ if (strlen($_SESSION['aid']) == 0) {
                                     <?php } ?>
                                 </td>
                                 <td>
-                                    <a href="view-application.php?viewid=<?php echo htmlentities($row->appid); ?>" class="btn btn-primary btn-sm">View Detail</a>
+                                    <?php if ($row->Status == 'Pending') { ?>
+                                        <a href="view-application.php?viewid=<?php echo htmlentities($row->appid); ?>" class="btn btn-primary btn-sm">View Details</a>
+                                    <?php } else { ?>
+                                        <button class="btn btn-secondary btn-sm" disabled>Done</button>
+                                    <?php } ?>
                                 </td>
                             </tr>
                         <?php 
@@ -156,8 +159,8 @@ if (strlen($_SESSION['aid']) == 0) {
                         }
                     }
                     ?>
-                  </tbody>
-                </table>
+                </tbody>
+              </table>
               </div>
             </div>
           </div>

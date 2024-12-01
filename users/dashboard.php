@@ -168,24 +168,36 @@ if (strlen($_SESSION['uid']) == 0) {
 
             <!-- Total Scholarships -->
             <div class="col-12 col-sm-6 col-md-4 mb-4">
-                <div class="card-body dashboard-card border-light">
-                    <?php
-                        $sql = "SELECT * FROM tblscheme";
-                        $query = $dbh->prepare($sql);
-                        $query->execute();
-                        $totalscheme = $query->rowCount();
-                    ?>
-                    <h5 class="text-white mb-0"><?php echo htmlentities($totalscheme); ?>
-                        <span class="float-right">Total Scholarships</span>
-                    </h5>
-                    <div class="progress my-3" style="height: 3px;">
-                        <div class="progress-bar" style="width: 55%"></div>
-                    </div>
-                    <a href="views-scheme.php">
-                        <p class="mb-0 text-white small-font">View Details <span class="float-right">
-                            <i class="fa fa-arrow-right"></i></span></p>
-                    </a>
-                </div>
+              <div class="card-body dashboard-card border-light">
+                  <?php
+                      // Assuming $userId is the ID of the logged-in user
+                      $userId = $_SESSION['uid']; // Replace with actual user session or ID
+
+                      // Query to count scholarships matching the user's department
+                      $sql = "
+                          SELECT COUNT(tblscheme.ID) AS TotalScholarships 
+                          FROM tblscheme 
+                          INNER JOIN tbluser 
+                          ON tbluser.department = tblscheme.department 
+                          WHERE tbluser.ID = :uid
+                      ";
+                      $query = $dbh->prepare($sql);
+                      $query->bindParam(':uid', $userId, PDO::PARAM_INT);
+                      $query->execute();
+                      $result = $query->fetch(PDO::FETCH_OBJ);
+                      $totalscheme = $result->TotalScholarships ?? 0; // Default to 0 if null
+                  ?>
+                  <h5 class="text-white mb-0"><?php echo htmlentities($totalscheme); ?>
+                      <span class="float-right">Total Scholarships</span>
+                  </h5>
+                  <div class="progress my-3" style="height: 3px;">
+                      <div class="progress-bar" style="width: 55%"></div>
+                  </div>
+                  <a href="views-scheme.php">
+                      <p class="mb-0 text-white small-font">View Details <span class="float-right">
+                          <i class="fa fa-arrow-right"></i></span></p>
+                  </a>
+              </div>
             </div>
         </div>
     </div>

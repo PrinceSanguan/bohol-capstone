@@ -12,7 +12,7 @@
             <li class="nav-item dropdown-lg">
                 <?php 
                 // Query for new applications
-                $sql = "SELECT tblapply.ID as appid, ApplicationNumber FROM tblapply WHERE Status IS NULL";
+                $sql = "SELECT tblapply.ID as appid, ApplicationNumber FROM tblapply WHERE Status = 'Pending'";
                 $query = $dbh->prepare($sql);
                 $query->execute();
                 $results = $query->fetchAll(PDO::FETCH_OBJ);
